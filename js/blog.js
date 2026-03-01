@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
 
                     hasPreloaded = true;
+                    showContent();
                 }
             } catch (e) {
                 console.error("Failed to parse blog preload data", e);
@@ -61,6 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!data) {
                 blogTitle.innerText = "Article not found.";
                 blogContent.innerHTML = '<p style="text-align: center;">We could not find the article you are looking for.</p>';
+                showContent();
                 return;
             }
 
@@ -76,12 +78,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Cleanup cache now that we are fully loaded and fresh
             localStorage.removeItem('promptlier_current_blog_preload');
+            showContent();
 
         } catch (err) {
             console.error("Error loading blog details:", err);
             if (!hasPreloaded) {
                 blogTitle.innerText = "Error loading article.";
                 blogContent.innerHTML = '<p style="text-align: center; color: red;">A database error occurred.</p>';
+                showContent();
             }
         }
     }
@@ -140,6 +144,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             }
         });
+    }
+
+    function showContent() {
+        const loader = document.getElementById('blogLoader');
+        if (loader) loader.style.display = 'none';
+
+        const heroContent = document.getElementById('blogHeroContent');
+        if (heroContent) heroContent.style.display = 'block';
+
+        const artContainer = document.getElementById('articleContainer');
+        if (artContainer) artContainer.style.display = 'block';
+
+        const footer = document.getElementById('mainFooter');
+        if (footer) footer.style.display = 'block';
     }
 
     // Start routine
