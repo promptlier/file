@@ -33,9 +33,6 @@
         .blog-wrapper {
             margin: 0;
             padding: 0;
-            opacity: 0;
-            /* Starts hidden, JS fades it in to prevent flash */
-            transition: opacity 0.3s ease;
         }
 
         /* HERO HEADER SECTION */
@@ -323,7 +320,6 @@
         </div>
     </nav>
 
-    <!-- The DOM Starts Hidden to allow JS Cache Injection before paint -->
     <main class="blog-wrapper" id="blogWrapper">
 
         <div class="back-nav">
@@ -333,7 +329,8 @@
         </div>
 
         <header class="blog-hero">
-            <img src="" alt="" class="blog-hero-image" id="blogCoverImage" style="display: none;">
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt=""
+                class="blog-hero-image" id="blogCoverImage">
 
             <div class="blog-hero-content">
                 <div class="blog-meta-top">
@@ -341,7 +338,7 @@
                     <span>•</span>
                     <span>Editorial</span>
                 </div>
-                <h1 class="blog-main-title" id="blogTitle"></h1>
+                <h1 class="blog-main-title" id="blogTitle">Loading article...</h1>
             </div>
         </header>
 
