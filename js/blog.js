@@ -45,12 +45,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Show the UI immediately if we have header cache
-        if (hasPreloaded) {
-            blogWrapper.style.opacity = '1';
-        } else {
+        if (!hasPreloaded) {
             document.title = "Loading Article... | Promptlier Editorials";
-            blogTitle.innerText = "Loading article...";
-            blogWrapper.style.opacity = '1'; // Fade in loading state
         }
 
         // --- FETCH FULL CONTENT ---
@@ -104,7 +100,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (data.cover_image_url) {
             blogCoverImage.src = data.cover_image_url;
             blogCoverImage.alt = "Cover image for " + data.title;
-            blogCoverImage.style.display = 'block';
         }
 
         // Dynamic Meta Tags (Best effort for Client Side SEO)
