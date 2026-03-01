@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompt Details | Promptlier</title>
+
+  <link rel="stylesheet" href="css/global.css">
+
+  <style>
+    /* =========================================
+       PROMPT DETAIL PAGE STYLES
+       ========================================= */
+
+    .prompt-page-wrapper {
+      max-width: var(--max-width);
+      margin: 60px auto;
+      padding: 0 24px;
+    }
+
+    /* THE SPLIT LAYOUT */
+    .prompt-detail-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: start;
+    }
+
+    @media (max-width: 860px) {
+      .prompt-detail-container {
+        grid-template-columns: 1fr;
+        /* Stacks on tablet/mobile */
+        gap: 30px;
+      }
+    }
+
+    /* LEFT SIDE: THE IMAGE */
+    .prompt-image-wrapper {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      width: 100%;
+    }
+
+    .prompt-image {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* RIGHT SIDE: THE CONTENT */
+    .prompt-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .prompt-title {
+      font-size: clamp(2rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 15px;
+      letter-spacing: -0.5px;
+    }
+
+    .prompt-meta-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .tag-large {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: rgba(0, 229, 255, 0.15);
+      /* Faint accent */
+      color: var(--accent);
+      padding: 6px 14px;
+      border-radius: 30px;
+      border: 1px solid var(--accent);
+      font-weight: 600;
+      backdrop-filter: blur(4px);
+    }
+
+    /* THE PROMPT TEXT BOX */
+    .prompt-box-wrapper {
+      background-color: #050505;
+      /* Pure dark for contrast */
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 24px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .prompt-box-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .prompt-text-display {
+      font-family: 'Inter', sans-serif;
+      /* Kept clean and readable */
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--text-main);
+      margin: 0;
+    }
+
+    /* BIG ACTION BUTTONS */
+    .action-group {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 40px;
+    }
+
+    .btn-massive {
+      flex: 1;
+      /* Takes up all available horizontal space */
+      padding: 18px 24px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-icon-large {
+      padding: 18px 24px;
+      font-size: 1.2rem;
+    }
+
+    #bookmarkBtn {
+      background: rgba(255, 66, 77, 0.15);
+      color: #ff424d;
+      border: 1px solid #ff424d;
+    }
+
+    #bookmarkBtn:hover {
+      background: rgba(255, 66, 77, 0.3);
+      color: #fff;
+    }
+
+    /* RELATED PROMPTS SECTION */
+    .related-section {
+      margin-top: 80px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .related-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 30px;
+    }
+
+    .prompt-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .prompt-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .prompt-card {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      aspect-ratio: 4 / 5;
+      background: var(--bg-surface);
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .prompt-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .prompt-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .prompt-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 24px;
+    }
+
+    @media (hover: hover) {
+      .prompt-card:hover .prompt-overlay {
+        opacity: 1;
+      }
+    }
+
+    @media (hover: none) {
+      .prompt-overlay {
+        opacity: 1;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 50%);
+      }
+    }
+
+    .prompt-text {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      margin-bottom: 15px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .prompt-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: rgba(0, 229, 255, 0.15);
+      /* Faint accent color */
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      backdrop-filter: blur(4px);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .prompt-actions .btn-outline {
+      background: rgba(255, 66, 77, 0.15);
+      color: #ff424d;
+      border: 1px solid #ff424d;
+      backdrop-filter: blur(4px);
+    }
+
+    .prompt-actions .btn-outline:hover {
+      background: rgba(255, 66, 77, 0.3);
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">Prompt<span>lier</span></div>
+    <button class="hamburger" id="hamburgerBtn">☰</button>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="gallery.html" class="nav-link" style="color: var(--text-main);">Gallery</a>
+      <a href="editorials.html" class="nav-link">Editorials</a>
+      <button class="btn btn-outline" id="navLoginBtn">Log In</button>
+      <a href="dashboard.html" class="btn btn-primary" id="navDashboardBtn" style="display: none;">Dashboard</a>
+    </div>
+  </nav>
+
+  <main class="prompt-page-wrapper">
+
+    <div class="prompt-detail-container">
+
+      <div class="prompt-image-wrapper">
+        <img src="" alt="" class="prompt-image" id="detailImage" style="display: none;">
+      </div>
+
+      <div class="prompt-info">
+
+        <h1 class="prompt-title" id="detailTitle"></h1>
+
+        <div class="prompt-meta-tags">
+          <span class="tag-large" id="detailCategory" style="display: none;"></span>
+          <span class="tag-large" id="detailModel" style="display: none;"></span>
+        </div>
+
+        <div class="prompt-box-wrapper">
+          <span class="prompt-box-label">The Prompt</span>
+          <p class="prompt-text-display" id="detailPromptText"></p>
+        </div>
+
+        <div class="action-group">
+          <button class="btn btn-primary btn-massive" id="copyPromptBtn">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" viewBox="0 0 24 24">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Copy Full Prompt
+          </button>
+
+          <button class="btn btn-outline btn-icon-large" id="bookmarkBtn" title="Save to Dashboard">
+            ♡
+          </button>
+
+          <button class="btn btn-outline btn-icon-large" id="shareBtn" title="Share this Prompt">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" viewBox="0 0 24 24">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+              <polyline points="16 6 12 2 8 6"></polyline>
+              <line x1="12" y1="2" x2="12" y2="15"></line>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <section class="related-section">
+      <h2 class="related-title">More like this</h2>
+
+      <div class="prompt-grid" id="relatedGrid">
+        <!-- NATIVE 0-CLS SKELETON LOADERS (Replaced by prompt.js after fetch) -->
+        <div class="prompt-card skeleton" aria-hidden="true" style="aspect-ratio: 4/5;"></div>
+        <div class="prompt-card skeleton" aria-hidden="true" style="aspect-ratio: 4/5;"></div>
+        <div class="prompt-card skeleton" aria-hidden="true" style="aspect-ratio: 4/5;"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-container">
+
+      <div class="footer-brand">
+        <h3>Prompt<span>lier</span></h3>
+        <p>The premium directory for cinematic, editorial, and hyper-realistic AI photo editing prompts. Elevate your
+          creative workflow.</p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4>Explore</h4>
+          <a href="gallery.html">Prompt Gallery</a>
+          <a href="editorials.html">Editorials & Guides</a>
+          <a href="index.html#trending">Trending Styles</a>
+        </div>
+
+        <div class="footer-column">
+          <h4>Account</h4>
+          <a href="dashboard.html">My Dashboard</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 Promptlier. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/global.js"></script>
+
+  <script src="js/prompt.js"></script>
+</body>
+
+</html>

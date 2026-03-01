@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompt Gallery | Promptlier</title>
+
+  <link rel="stylesheet" href="css/global.css">
+
+  <style>
+    /* =========================================
+       GALLERY PAGE SPECIFIC STYLES
+       ========================================= */
+
+    .gallery-container {
+      max-width: var(--max-width);
+      margin: 40px auto 80px;
+      padding: 0 20px;
+    }
+
+    /* GALLERY HEADER (Search & Filters) */
+    .gallery-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .gallery-header h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 15px;
+    }
+
+    .gallery-header p {
+      color: var(--text-muted);
+      margin-bottom: 30px;
+    }
+
+    /* Search Bar */
+    .search-wrapper {
+      max-width: 600px;
+      margin: 0 auto 30px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 16px 24px;
+      font-size: 1rem;
+      color: var(--text-main);
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 50px;
+      /* Pill shape */
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+      /* Subtle cyan glow */
+    }
+
+    /* Filter Chips Container */
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      /* Allow wrapping onto multiple lines */
+      gap: 12px;
+      justify-content: center;
+      padding-bottom: 20px;
+    }
+
+    .chip {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: var(--transition);
+    }
+
+    .chip:hover,
+    .chip.active {
+      background-color: var(--text-main);
+      color: var(--bg-main);
+      border-color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* MASONRY GRID (Pinterest Style) */
+    .masonry-grid {
+      /* CSS Columns is the cleanest way to do pure CSS masonry */
+      column-count: 3;
+      column-gap: 24px;
+    }
+
+    /* Responsive adjustments for Masonry */
+    @media (max-width: 1024px) {
+      .masonry-grid {
+        column-count: 2;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .masonry-grid {
+        column-count: 1;
+      }
+    }
+
+    .masonry-item {
+      break-inside: avoid;
+      /* Prevents a card from splitting across columns */
+      margin-bottom: 24px;
+    }
+
+    /* REUSABLE PROMPT CARD (Adapted for Masonry) */
+    .prompt-card {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--bg-surface);
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .prompt-card img {
+      width: 100%;
+      height: auto;
+      /* Lets the image dictate the card height naturally */
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .prompt-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .prompt-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.2) 70%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 24px;
+    }
+
+    @media (hover: hover) {
+      .prompt-card:hover .prompt-overlay {
+        opacity: 1;
+      }
+    }
+
+    @media (hover: none) {
+      .prompt-overlay {
+        opacity: 1;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 60%);
+      }
+    }
+
+    .prompt-text {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      margin-bottom: 15px;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .prompt-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: rgba(0, 229, 255, 0.15);
+      /* Faint accent color */
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      backdrop-filter: blur(4px);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .prompt-actions .btn-outline {
+      background: rgba(255, 66, 77, 0.15);
+      color: #ff424d;
+      border: 1px solid #ff424d;
+      backdrop-filter: blur(4px);
+    }
+
+    .prompt-actions .btn-outline:hover {
+      background: rgba(255, 66, 77, 0.3);
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">Prompt<span>lier</span></div>
+    <button class="hamburger" id="hamburgerBtn">☰</button>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="gallery.html" class="nav-link" style="color: var(--text-main);">Gallery</a>
+      <a href="editorials.html" class="nav-link">Editorials</a>
+      <button class="btn btn-outline" id="navLoginBtn">Log In</button>
+      <a href="dashboard.html" class="btn btn-primary" id="navDashboardBtn" style="display: none;">Dashboard</a>
+    </div>
+  </nav>
+
+  <main class="gallery-container">
+
+    <div class="gallery-header">
+      <h1>Prompt Library</h1>
+      <p>Search over 1,000+ high-end photo editing and generative AI prompts.</p>
+
+      <div class="search-wrapper">
+        <input type="text" class="search-input" placeholder="Search for 'Cinematic portrait' or 'Kodak Film'...">
+      </div>
+
+      <div class="filter-chips">
+        <button class="chip active">All</button>
+        <button class="chip">Portrait</button>
+        <button class="chip">Landscape</button>
+        <button class="chip">Macro</button>
+        <button class="chip">Architecture</button>
+        <button class="chip">Fashion</button>
+        <button class="chip">Cinematic</button>
+        <button class="chip">Analog Film</button>
+        <button class="chip">Anime</button>
+        <button class="chip">3D Render</button>
+        <button class="chip">Food</button>
+      </div>
+    </div>
+
+    <div class="masonry-grid" id="mainGalleryGrid">
+
+      <!-- NATIVE 0-CLS SKELETON LOADERS (Replaced by gallery.js after fetch) -->
+      <div class="masonry-item">
+        <div class="prompt-card skeleton" aria-hidden="true" style="aspect-ratio: 3/4;"></div>
+      </div>
+      <div class="masonry-item">
+        <div class="prompt-card skeleton" aria-hidden="true" style="aspect-ratio: 4/3;"></div>
+      </div>
+      <div class="masonry-item">
+        <div class="prompt-card skeleton" aria-hidden="true" style="aspect-ratio: 1/1;"></div>
+      </div>
+      <div class="masonry-item">
+        <div class="prompt-card skeleton" aria-hidden="true" style="aspect-ratio: 4/5;"></div>
+      </div>
+      <div class="masonry-item">
+        <div class="prompt-card skeleton" aria-hidden="true" style="aspect-ratio: 16/9;"></div>
+      </div>
+      <div class="masonry-item">
+        <div class="prompt-card skeleton" aria-hidden="true" style="aspect-ratio: 2/3;"></div>
+      </div>
+      <div class="masonry-item">
+        <div class="prompt-card skeleton" aria-hidden="true" style="aspect-ratio: 3/4;"></div>
+      </div>
+      <div class="masonry-item">
+        <div class="prompt-card skeleton" aria-hidden="true" style="aspect-ratio: 1/1;"></div>
+      </div>
+      <div class="masonry-item">
+        <div class="prompt-card skeleton" aria-hidden="true" style="aspect-ratio: 4/5;"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h3>Prompt<span>lier</span></h3>
+        <p>The premium directory for cinematic, editorial, and hyper-realistic AI photo editing prompts. Elevate your
+          creative workflow.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4>Explore</h4>
+          <a href="gallery.html">Prompt Gallery</a>
+          <a href="editorials.html">Editorials & Guides</a>
+          <a href="index.html#trending">Trending Styles</a>
+        </div>
+        <div class="footer-column">
+          <h4>Account</h4>
+          <a href="dashboard.html">My Dashboard</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Promptlier. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/global.js"></script>
+  <script src="js/gallery.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editorials & Guides | Promptlier</title>
+
+    <meta name="description"
+        content="Read the latest premium editorial guides and tutorials on AI photo generation and writing better prompts.">
+
+    <link rel="stylesheet" href="css/global.css">
+
+    <style>
+        /* =========================================
+           EDITORIALS PAGE SPECIFIC STYLES
+           ========================================= */
+        .section-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .editorials-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            padding-top: 10px;
+        }
+
+        .editorials-header h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .editorials-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* BLOG CARDS GRID */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .blog-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-card:hover {
+            border-color: var(--text-muted);
+            transform: translateY(-5px);
+        }
+
+        .blog-image {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            background-color: var(--bg-surface);
+        }
+
+        .blog-content {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .blog-date {
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .blog-title {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+        }
+
+        .blog-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">Prompt<span>lier</span></div>
+        <button class="hamburger" id="hamburgerBtn">☰</button>
+        <div class="nav-links" id="navLinks">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="gallery.html" class="nav-link">Gallery</a>
+            <a href="editorials.html" class="nav-link" style="color: var(--text-main);">Editorials</a>
+            <button class="btn btn-outline" id="navLoginBtn">Log In</button>
+            <a href="dashboard.html" class="btn btn-primary" id="navDashboardBtn" style="display: none;">Dashboard</a>
+        </div>
+    </nav>
+
+    <main class="section-container" style="min-height: 80vh; padding-top: 20px;">
+        <div class="editorials-header">
+            <h1>Editorials & Guides</h1>
+            <p>Master the art of AI generation with our latest tutorials, insights, and expert guides.</p>
+        </div>
+
+        <div class="blog-grid" id="allBlogsGrid">
+            <!-- NATIVE 0-CLS SKELETON LOADERS (Replaced by editorials.js after fetch) -->
+            <div class="blog-card skeleton" aria-hidden="true" style="aspect-ratio: 16/14; border:none;"></div>
+            <div class="blog-card skeleton" aria-hidden="true" style="aspect-ratio: 16/14; border:none;"></div>
+            <div class="blog-card skeleton" aria-hidden="true" style="aspect-ratio: 16/14; border:none;"></div>
+            <div class="blog-card skeleton" aria-hidden="true" style="aspect-ratio: 16/14; border:none;"></div>
+            <div class="blog-card skeleton" aria-hidden="true" style="aspect-ratio: 16/14; border:none;"></div>
+            <div class="blog-card skeleton" aria-hidden="true" style="aspect-ratio: 16/14; border:none;"></div>
+            <div class="blog-card skeleton" aria-hidden="true" style="aspect-ratio: 16/14; border:none;"></div>
+            <div class="blog-card skeleton" aria-hidden="true" style="aspect-ratio: 16/14; border:none;"></div>
+            <div class="blog-card skeleton" aria-hidden="true" style="aspect-ratio: 16/14; border:none;"></div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>Prompt<span>lier</span></h3>
+                <p>The premium directory for cinematic, editorial, and hyper-realistic AI photo editing prompts. Elevate
+                    your creative workflow.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Explore</h4>
+                    <a href="gallery.html">Prompt Gallery</a>
+                    <a href="editorials.html">Editorials & Guides</a>
+                    <a href="index.html#trending">Trending Styles</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Account</h4>
+                    <a href="dashboard.html">My Dashboard</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Promptlier. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/global.js"></script>
+    <script src="js/editorials.js"></script>
+</body>
+
+</html>
