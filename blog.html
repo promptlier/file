@@ -330,23 +330,26 @@
 
         <header class="blog-hero">
             <img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt=""
-                class="blog-hero-image" id="blogCoverImage">
+                class="blog-hero-image" id="blogCoverImage" fetchpriority="high" decoding="sync">
 
-            <div class="blog-hero-content">
+            <div id="blogLoader" style="text-align: center; padding: 40px; color: var(--text-muted); width: 100%;">
+                Loading article...
+            </div>
+
+            <div class="blog-hero-content" id="blogHeroContent" style="display: none;">
                 <div class="blog-meta-top">
-                    <span id="blogDate">Loading...</span>
+                    <span id="blogDate"></span>
                     <span>•</span>
                     <span>Editorial</span>
                 </div>
-                <h1 class="blog-main-title" id="blogTitle">Loading article...</h1>
+                <h1 class="blog-main-title" id="blogTitle"></h1>
             </div>
         </header>
 
-        <article class="article-container">
+        <article class="article-container" id="articleContainer" style="display: none;">
 
             <div class="article-content ql-editor" id="blogContent">
                 <!-- Rich text HTML injected here by JS -->
-                <p style="text-align: center; color: var(--text-muted);">Fetching article content...</p>
             </div>
 
             <footer class="article-footer">
@@ -374,7 +377,7 @@
 
     </main>
 
-    <footer class="footer">
+    <footer class="footer" id="mainFooter" style="display: none;">
         <div class="footer-container">
 
             <div class="footer-brand">
